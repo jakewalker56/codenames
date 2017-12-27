@@ -13,7 +13,7 @@ word_layout = None
 team_layout = None
 
 def init():
-  load_model('~/Downloads/GoogleNews-vectors-negative300.bin', 700000)
+  load_model('~/Downloads/GoogleNews-vectors-negative300.bin', 200000)
   load_word_layout("word_layout.csv")
   load_team_layout("team_layout.csv")
 
@@ -61,18 +61,26 @@ def generate_clue(team, try_n = 1000):
       print("unexpected empty list:")
       print(clues[clue_n])
       continue
-    for i in range(len(decoded_clue)):
+    all_words = True
+    for i in range(len(decoded_clue)):  
       if decoded_clue[i] not in team_words(team):
         #the ith word is incorrect; only return i-1
+        all_words = False
+        if i > 1:
+          print("possible word:")
+          print(clues[clue_n][0])
+          print(decoded_clue)
         if (i) > best_result_n:
-          # print("new best:")
-          # print(clues[clue_n][0])
-          # print(decoded_clue)
-          # print(clue_n)
-          # print(i)
           best_result = clue_n
           best_result_n = i
         break
+    if all_words is True:
+        print("optimal word:")
+        print(clues[clue_n][0])
+        print(decoded_clue)
+        best_result = clue_n
+        best_result_n = i
+
   return([clues[best_result], best_result_n])
 
 def decode_clue(word, n):
